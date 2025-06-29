@@ -1,0 +1,21 @@
+@startuml
+title Context diagram «Bank system»
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "User of the «Internet bank» system")
+Person(manager, "Manager" ,"Manager call cente")
+System(BankSystem, "Bank system")
+
+System_Ext(api, "ABS API")
+System_Ext(call_centr, "Call Centr SFTP")
+
+
+Rel(user, BankSystem, "System user")
+Rel(manager, BankSystem, "System user")
+Rel(BankSystem, api, "Work with deposits")
+Rel(BankSystem, call_centr, "Work with call centr")
+
+@enduml
