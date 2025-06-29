@@ -1,0 +1,16 @@
+@startuml
+title Context diagram «Internet bank»
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "User of the «Internet bank» system")
+System(InternetBanSystem, "«Internet bank» system")
+
+System_Ext(api, "ABS API")
+
+Rel(user, InternetBanSystem, "System user")
+Rel(InternetBanSystem, api, "Work with deposits")
+
+@enduml

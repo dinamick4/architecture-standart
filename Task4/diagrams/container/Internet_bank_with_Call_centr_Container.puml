@@ -1,0 +1,61 @@
+@startuml
+title Container diagram «Bank»
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "User of the «Interhet Bank» system")
+Person(manager, "Manager call cente", Сall сenter manager )
+System(InterhetBankSystem, "«Bank» System")
+
+Container_Boundary(InterhetBankSystem, "Interhet bank system") {
+  Container(WebApp, "Web Application", "Spring", "Handles user interactions")
+  Container(MobileApp, "Mobile Application", "Spring", "Handles user interactions")
+   Container(WebApp, "Web Application", "Spring", "Handles user interactions")
+  Container(CallCenterApp, "Call Center Application", "Spring,PostgreSQL", "Handles manager interactions")
+
+  Container(APIGateway, "API Gateway")
+
+  Container(UserProfileService, "User profile Service", "Spring")
+  Container(AuthorizationService, "Authorization Service", "Spring")
+  Container(DepositService, "Deposit Service", "Spring")
+  Container(PaymentService, "Payment Service", "Spring")
+  Container(CallCenterService, "CallCenter Service", "Spring")
+  Container(EventsService, "Events Service", "kafka")
+
+  Container(Payment_Database, "Payment Database", "PostgreSQL", "Stores payment data")
+  Container(User_Database, "User Database", "PostgreSQL", "Stores authorization data")
+  Container(Deposit_Database, "Deposi Database", "PostgreSQL", "Stores deposit data")
+}
+
+Rel(user, WebApp,)
+Rel(user, MobileApp,)
+Rel(manager, CallCenterApp,)
+
+System_Ext(bank, "Bank System", "External bank for processing payments")
+System_Ext(api_abs, "ABS API")
+System_Ext(call_centr, "Call Centr", "External call centr")
+
+
+Rel(WebApp, APIGateway ,"API Gateway requests")
+Rel(MobileApp, APIGateway ,"API Gateway requests")
+Rel(CallCenterApp, APIGateway ,"API Gateway requests")
+
+Rel(APIGateway,UserProfileService,"Processes client profile requests")
+Rel(APIGateway,AuthorizationService,"Processes authorization and identification requests")
+Rel(APIGateway,DepositService,"Processes requests deposit")
+Rel(APIGateway,PaymentService,"Processes payment requests")
+Rel(APIGateway,CallCenterService,"Processes call center requests")
+
+Rel(PaymentService, Payment_Database,"Reads/Writes payment data")
+Rel(PaymentService,bank,"Processes payments")
+Rel(PaymentService,EventsService,"read/write events")
+Rel(DepositService,EventsService,"read/write events")
+Rel(AuthorizationService, User_Database,"Reads/Writes authorization data")
+Rel(UserProfileService, User_Database,"Reads/Writes user profile data")
+Rel(DepositService, Deposit_Database,"Reads/Writes deposit data")
+Rel(DepositService, api_abs, "Processes deposits")
+Rel(CallCenterService, EventsService, "Processes deposits")
+Rel(CallCenterService, call_centr, "Sending information on deposits via SFTP server")
+@enduml
